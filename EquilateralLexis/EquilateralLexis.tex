@@ -1,0 +1,40 @@
+% setwd("E://CODE//EquilateralLexis//")
+\documentclass[a4paper]{article}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{epsfig}
+\usepackage{subfigure} 
+\usepackage{verbatim}
+\usepackage[OT1]{fontenc}
+\usepackage{Sweave}
+\begin{document}
+
+\title{Temporal proportionality in the graphical reprentation of age-period-cohort classified demographic rates: (Re)introducing the equilateral Lexis surface}
+\author{Tim Riffe}
+
+\maketitle
+\begin{abstract}
+The use of demographic surfaces composed of equilateral APC triangles is encouraged over standard 'Lexis' proportions in order to eliminate disotortion of the cohort perspective. This transform procedure yields age, period and cohort dimensions of comparable scales. Resulting images are highly legible and interpretable in a similar way to more commonly used standard demographic surfaces. While 'Lexis' diagrams and 'Lexis' surfaces are now known to be misnomers, intellectual parentage for the equilateral Lexis surface most likey is owed to Lexis (1875).
+\end{abstract}
+
+\section{The standard demographic surface}
+Any demographic data classified by age, period and cohort are candidate to be plotted as surfaces, with color gradients or contours specifying value intervals for the rate in question. Such surfaces allow for the meaningful summary of large amounts of data and are useful as both diagnostics and didactic tools. Software has been developed in order to convert tables of demographic data into surface figures \citep{vaupel1987thousands, andreev1999overview}, as well as a variety of general surface functions from statistical programming languages coercible to 'Lexis' surfaces\footnote{such as \texttt{levelplot()} in the \texttt{lattice} package\citep{sarkar2008lattice} in the R language\citep{ihaka1996r}, among others.}. Demographic surfaces follow a strict set of guidlines on proportionality, with a unity aspect ratio between age on the y-axis and period on the x-axis\footnote{rearranging the data, a less common rendering of age in the y-axis and cohort in the x-axis with a unity aspect ratio has also been done.}. A ninety degree angle between age and period directions forces a 45 degree along the cohort dimension, matching each year of cohort time to a length equal to $sqrt{2}$ in euclidean space.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm,height=6cm]{Figs/comparisondiagram.pdf}
+\caption{A deceptive scatterplot}
+\end{figure}
+
+Standard demographic surfaces repecting these conventions of proportions are most commonly referred to as 'Lexis' surfaces. We know this name to be a misnomer due to the investigative work of \citet{vandeschrick2001lexis} and \citet{keiding2011age}. 
+
+\section{transforming the Lexis diagram}
+
+
+\nocite{*} % make sure all references included even if not explicitly in paper
+\bibliographystyle{plainnat}
+\bibliography{references}   
+
+ 
+\end{document}

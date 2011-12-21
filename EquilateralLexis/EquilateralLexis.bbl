@@ -1,0 +1,44 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Andreev(1999)]{andreev1999overview}
+K.~Andreev.
+\newblock Overview of the program lexis 1.0.
+\newblock \emph{S. Heinzel and T. Plesser}, 1999.
+
+\bibitem[Ihaka and Gentleman(1996)]{ihaka1996r}
+R.~Ihaka and R.~Gentleman.
+\newblock R: a language for data analysis and graphics.
+\newblock \emph{Journal of computational and graphical statistics}, pages
+  299--314, 1996.
+
+\bibitem[Keiding(2011)]{keiding2011age}
+N.~Keiding.
+\newblock Age--period--cohort analysis in the 1870s: Diagrams, stereograms, and
+  the basic differential equation.
+\newblock \emph{Canadian Journal of Statistics}, 39\penalty0 (3):\penalty0
+  405--420, 2011.
+
+\bibitem[Sarkar(2008)]{sarkar2008lattice}
+Deepayan Sarkar.
+\newblock \emph{Lattice: Multivariate Data Visualization with R}.
+\newblock Springer, New York, 2008.
+\newblock URL \url{http://lmdvr.r-forge.r-project.org}.
+\newblock ISBN 978-0-387-75968-5.
+
+\bibitem[Vandeschrick(2001)]{vandeschrick2001lexis}
+C.~Vandeschrick.
+\newblock The lexis diagram, a misnomer.
+\newblock \emph{Demographic Research}, 4\penalty0 (3):\penalty0 97--124, 2001.
+
+\bibitem[Vaupel et~al.(1987)Vaupel, Gambill, and Yashin]{vaupel1987thousands}
+J.W. Vaupel, B.A. Gambill, and A.I. Yashin.
+\newblock \emph{Thousands of Data at a Glance: Shaded Contour Maps of
+  Demographic Surfaces}.
+\newblock International Institute for Applied Systems Analysis, 1987.
+
+\end{thebibliography}
