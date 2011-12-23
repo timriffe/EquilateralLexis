@@ -149,3 +149,5 @@ text(1.5,ysc*1.5,expression(frac(sqrt(3),2)),cex=.8)
 segments(1.5,1.57,1.5,1.45,lty=3)
 segments(1.5,ysc+.02,1.5,1.14,lty=3)
 dev.off()
+
+
