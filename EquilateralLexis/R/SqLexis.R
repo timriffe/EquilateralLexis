@@ -12,11 +12,12 @@ SqLexis <- function(Rates,
 		lab.breaks = NULL, 
 		legend.args = NULL, 
 		axis.args = NULL, 
+		cex.ax.lab = .8,
 		...){
 	
 	# Standard Lexis coordinates:
 	LexTriPeriod <- function(x,brks,cols,value){
-		col <- cols[(brks-x[value])>=0][1]
+		coli <- cols[(brks-x[value]) >= 0][1]
 		# lower
 		if (diff(c(x["Age"],x["Year"]))==x["Cohort"]){
 			xcoord <- c(x["Year"],x["Year"]+1,x["Year"]+1)
@@ -25,7 +26,7 @@ SqLexis <- function(Rates,
 			xcoord <- c(x["Year"],x["Year"]+1,x["Year"])
 			ycoord <- c(x["Age"],x["Age"]+1,x["Age"]+1)
 		}
-		polygon(xcoord,ycoord,col=col,border="transparent")
+		polygon(xcoord,ycoord,col=coli,border="transparent")
 	}
 	
 	xlim <- c(min(Rates[,"Year"]), max(Rates[,"Year"]) + 1)
@@ -48,7 +49,7 @@ SqLexis <- function(Rates,
 	} else {
 		segments(yrs, min(Rates[, "Age"]), yrs, min(Rates[, "Age"]) - .5, col = "black")
 	}
-	text(yrs - .5, ylim[1]-3, yrs, pos = 1, srt = 90, xpd = TRUE)
+	text(yrs - .5, ylim[1]-3, yrs, pos = 1, srt = 90, xpd = TRUE, cex = cex.ax.lab)
 	
 	# age lines, ticks, labels
 	if (guides){
@@ -56,7 +57,7 @@ SqLexis <- function(Rates,
 	} else {
 		segments(xlim[1] - .5, ages, xlim[1], ages, col = "black")
 	}
-	text(xlim[1] - 1, ages, labels = ages, pos = 2, xpd = TRUE)
+	text(xlim[1] - 1, ages, labels = ages, pos = 2, xpd = TRUE, cex = cex.ax.lab)
 	
 	# cohort lines, ticks, labels
 	cohorts <- sort(unique(Rates[, "Cohort"]))
@@ -73,7 +74,7 @@ SqLexis <- function(Rates,
 	} else {
 		segments(xright,ymax,xright-.5,ymax-.5,col="black")
 	}
-	text(xright-.5,ymax,cohorts,srt=45,xpd=TRUE,pos=4)
+	text(xright - .5, ymax, cohorts, srt = 45, xpd = TRUE, pos = 4, cex = cex.ax.lab)
 	
 	rect(xlim[1],ylim[1],xlim[2],ylim[2])
 	if (legend){
@@ -81,4 +82,3 @@ SqLexis <- function(Rates,
 	}
 }
 
-citation("lattice")
