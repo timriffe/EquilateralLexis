@@ -21,6 +21,8 @@ EqLexis <- function(Rates,
 		a.ax.lab.adj=c(0,0),
 		c.ax.lab.adj=c(0,0),
 		y.ax.lab.adj=c(0,0),
+		cex.lab=1,
+		cex.ax.lab=.8,
 		...){
 	# try to coerce to numeric matrix
 	if (is.data.frame(Rates)){
@@ -92,7 +94,7 @@ EqLexis <- function(Rates,
 	} else {
 		segments(x1 + .25, ylim[1] - ysc * .5, x1 - .5, ylim[1] + ysc, col = "black")
 	}
-	text(x1 + 2 + y.ax.lab.adj[1], ylim[1] - 1 + y.ax.lab.adj[2], yrrefs, pos = 1, srt = -60)
+	text(x1 + 2 + y.ax.lab.adj[1], ylim[1] - 1 + y.ax.lab.adj[2], yrrefs, pos = 1, srt = -60,cex=cex.ax.lab)
 	
 	# cohort lines to draw 
 	cohs <- unique(Rates[,"Cohort"])
@@ -114,7 +116,7 @@ EqLexis <- function(Rates,
 	} else {
 		segments(x2-1,y2-ysc*2,x2,y2,col="black")
 	}
-	text(x2 + 1 + c.ax.lab.adj[1], y2 + 1 + c.ax.lab.adj[2], cohrefs, srt = 60, pos = 3)
+	text(x2 + 1 + c.ax.lab.adj[1], y2 + 1 + c.ax.lab.adj[2], cohrefs, srt = 60, pos = 3,cex=cex.ax.lab)
 	
 	# drawing age refs needed some year info
 	if (guides) {
@@ -122,12 +124,11 @@ EqLexis <- function(Rates,
 	} else {
 		segments(min(yrs)-agerefs*.5-.5,agerefs*ysc,min(yrs)-agerefs*.5+.5,agerefs*ysc,col="black")
 	}
+	text(min(yrs) - agerefs * .5 - .5 + a.ax.lab.adj[1], agerefs * ysc + a.ax.lab.adj[2], labels = agerefs, pos = 2, cex = cex.ax.lab)
 	
-	text(min(yrs) - agerefs * .5 - .5 + a.ax.lab.adj[1], agerefs * ysc + a.ax.lab.adj[2], labels = agerefs, pos = 2)
-	
-	text(min(yrs) - 10 - agerefs[4] * .5 + a.lab.adj[1], agerefs[3] + a.lab.adj[2], labels = a.lab, cex = 1.5)
-	text(max(yrrefs) - agerefs[2] * .5 + c.lab.adj[1], agerefs[length(agerefs) - 2] + c.lab.adj[2], labels = c.lab, srt = 60, cex = 1.5, pos = 3)
-	text(median(yrrefs)+y.lab.adj[1],0+y.lab.adj[2],y.lab,cex=1.5,srt=-60)
+	text(min(yrs) - 10 - agerefs[4] * .5 + a.lab.adj[1], agerefs[3] + a.lab.adj[2], labels = a.lab, cex = cex.lab)
+	text(max(yrrefs) - agerefs[2] * .5 + c.lab.adj[1], agerefs[length(agerefs) - 2] + c.lab.adj[2], labels = c.lab, srt = 60, cex = cex.lab, pos = 3)
+	text(median(yrrefs)+y.lab.adj[1],0+y.lab.adj[2],y.lab,cex=cex.lab,srt=-60)
 	
 	# legend:
 	if (legend){
