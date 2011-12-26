@@ -2,9 +2,11 @@
 # Author: triffe
 ###############################################################################
 #library(LexisDiagram)
-source("/home/triffe/git/LexisDiagram/LexisDiagram/R/Lexis.R")
+# source("/home/triffe/git/LexisDiagram/LexisDiagram/R/Lexis.R") # sources the package code, could change
+source("R/LexisDiagramFunction.R") # a permanent version for this paper.
 #dev.new(height=7,width=5)
-library(cairoDevice)
+library(cairoDevice) # cairoDevice used on ubuntu
+# switch to CairoPDF of the Cairo package on Windows.
 Cairo_pdf("Figs/Figure1.pdf",height=7,width=5)
 Lexis(years = 2008:2012, 
 		ages = 0:6, 
