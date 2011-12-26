@@ -13,6 +13,7 @@ SqLexis <- function(Rates,
 		legend.args = NULL, 
 		axis.args = NULL, 
 		cex.ax.lab = .8,
+		legend.width = 1.2,
 		...){
 	
 	# Standard Lexis coordinates:
@@ -78,7 +79,7 @@ SqLexis <- function(Rates,
 	
 	rect(xlim[1],ylim[1],xlim[2],ylim[2])
 	if (legend){
-		fields:::image.plot(z = brks, lab.breaks = lab.breaks, col = cols, legend.only = TRUE, legend.args = legend.args, axis.args = axis.args)
+		fields:::image.plot(z = brks, lab.breaks = lab.breaks, col = cols, legend.only = TRUE, legend.width = legend.width, legend.args = legend.args, axis.args = axis.args)
 	}
 }
 
