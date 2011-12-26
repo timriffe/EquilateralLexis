@@ -12,17 +12,18 @@ EqLexis <- function(Rates,
 		lab.breaks = NULL, 
 		legend.args = NULL, 
 		axis.args = NULL, 
-		a.lab=NULL,
-		c.lab=NULL,
-		y.lab=NULL,
-		a.lab.adj=c(0,0),
-		c.lab.adj=c(0,0),
-		y.lab.adj=c(0,0),
-		a.ax.lab.adj=c(0,0),
-		c.ax.lab.adj=c(0,0),
-		y.ax.lab.adj=c(0,0),
-		cex.lab=1,
-		cex.ax.lab=.8,
+		a.lab = NULL,
+		c.lab = NULL,
+		y.lab = NULL,
+		a.lab.adj = c(0,0),
+		c.lab.adj = c(0,0),
+		y.lab.adj = c(0,0),
+		a.ax.lab.adj = c(0,0),
+		c.ax.lab.adj = c(0,0),
+		y.ax.lab.adj = c(0,0),
+		cex.lab = 1,
+		cex.ax.lab = .8,
+		legend.width = 1.2,
 		...){
 	# try to coerce to numeric matrix
 	if (is.data.frame(Rates)){
@@ -132,7 +133,7 @@ EqLexis <- function(Rates,
 	
 	# legend:
 	if (legend){
-		fields:::image.plot(z = brks, lab.breaks = lab.breaks, col = cols, legend.args = legend.args, axis.args = axis.args, legend.only = TRUE)
+		fields:::image.plot(z = brks, lab.breaks = lab.breaks, col = cols, legend.width = legend.width, legend.args = legend.args, axis.args = axis.args, legend.only = TRUE)
 	}
 	# FINISH bounding box
 	# give parallelogram box
