@@ -1,5 +1,8 @@
+# This function renders the equilateral Lexis surface appearing in Figure 2
 
-# Author: triffe
+# it contains some arguments not used in that figure because this is a stripped down version
+# of EqLexis()- the more general function that will be included in a package for Lexis surfaces
+# sometime soon. 
 ###############################################################################
 
 EqLexisSp <- function(Rates, 
@@ -32,7 +35,9 @@ EqLexisSp <- function(Rates,
 	
 	# define polygon plot function:
 	EQLexTriTiltLeft <- function(x,brks=breaks,cols=col,val=value){
-		coli <- cols[(brks-x[val]) >= 0][1]
+		#coli <- cols[(brks-x[val]) >= 0][1]
+		coli <- rev(cols[! (brks-x[value]) > 0])[1]
+		coli <- ifelse(x[value]==0,NA,coli)
 		ys <- sin(pi/3)
 		# lower
 		if (diff(c(x["Age"],x["Year"]))==x["Cohort"]){

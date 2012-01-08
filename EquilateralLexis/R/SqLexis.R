@@ -18,7 +18,9 @@ SqLexis <- function(Rates,
 	
 	# Standard Lexis coordinates:
 	LexTriPeriod <- function(x,brks,cols,value){
-		coli <- cols[(brks-x[value]) >= 0][1]
+		#coli <- cols[(brks-x[value]) >= 0][1]
+		coli <- rev(cols[! (brks-x[value]) > 0])[1]
+		coli <- ifelse(x[Value]==0,NA,coli)
 		# lower
 		if (diff(c(x["Age"],x["Year"]))==x["Cohort"]){
 			xcoord <- c(x["Year"],x["Year"]+1,x["Year"]+1)

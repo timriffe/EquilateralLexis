@@ -1,3 +1,48 @@
-This is BibTeX, Version 0.99dThe top-level auxiliary file: EquilateralLexis.aux
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: EquilateralLexis.aux
 The style file: plainnat.bst
-Database file #1: references.bib
+Database file #1: References.bib.bib
+Warning--entry type for "HFD2011" isn't style-file defined
+--line 225 of file References.bib.bib
+You've used 16 entries,
+            2773 wiz_defined-function locations,
+            695 strings with 7573 characters,
+and the built_in function-call counts, 6618 in all, are:
+= -- 581
+> -- 333
+< -- 14
++ -- 117
+- -- 101
+* -- 474
+:= -- 1035
+add.period$ -- 51
+call.type$ -- 16
+change.case$ -- 76
+chr.to.int$ -- 16
+cite$ -- 32
+duplicate$ -- 335
+empty$ -- 577
+format.name$ -- 121
+if$ -- 1382
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 18
+newline$ -- 91
+num.names$ -- 66
+pop$ -- 174
+preamble$ -- 1
+purify$ -- 65
+quote$ -- 0
+skip$ -- 251
+stack$ -- 0
+substring$ -- 215
+swap$ -- 37
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 156
+warning$ -- 0
+while$ -- 65
+width$ -- 0
+write$ -- 214
+(There was 1 warning)

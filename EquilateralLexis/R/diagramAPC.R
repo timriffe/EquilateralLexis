@@ -1,16 +1,18 @@
-
-# Author: triffe
-###############################################################################
+# Figure 1 syntax, all curves and angles are hand-made, so to speak, so the code can get sticky:
 
 # this produces two diagrams meant to display the differences in dimensions
 # of the right and equilateral triangles:
 setwd("E:/CODE/EquilateralLexis")
+
 #dev.off()
 #dev.new(height=4,width=8)
-library(Cairo)
-CairoPDF(height=4,width=8,"Figs//Figure2.pdf")
-#library(cairoDevice)
-#Cairo_pdf("Figs/Figure2.pdf",height=4,width=8)
+
+# Cairo on Windows, cairoDevice on ubuntu, is the conclusion I came to...
+#library(Cairo)
+#CairoPDF(height=4,width=8,"Figs//Figure1.pdf")
+library(cairoDevice)
+
+Cairo_pdf("Figs/Figure1.pdf",height=4,width=8)
 par(mar=c(1,1,1,1),xaxs="i",yaxs="i",mfrow=c(1,2))
 plot(NULL,type="n",xlim=c(.6,2.4),ylim=c(.6,2.4),xlab="",ylab="",main="Standard",axes=FALSE,asp=1)
 polygon(c(1,2,2),c(1,1,2))
@@ -30,7 +32,7 @@ xvals <- cos(x)*.1+2
 yvals <- sin(x)*.1+2
 lines(xvals,yvals)
 
-# equal angle markers!:
+# equal angle markers!: (used later too)
 rotationmat <- function(theta){
 	matrix(c(cos(theta),sin(theta),-sin(theta),cos(theta)),ncol=2)
 }
@@ -53,6 +55,7 @@ segments(x1y1[1]+2,x1y1[2]+2,x2y2[1]+2,x2y2[2]+2)
 # 45 degrees
 text(1.2,1.1,expression(45*degree),cex=.8)
 
+# label sides and points
 points(c(1,2,2,1),c(1,1,2,2),pch=19)
 text(.95,.95,"A")
 text(2.05,.95,"B")
@@ -63,6 +66,12 @@ text(1.5,2.05,1)
 text(.95,1.5,1)
 text(2.05,1.5,1)
 text(1.45,1.55,expression(sqrt(2)),srt=45)
+
+# give point coordinates:
+text(.95,.85,"(p, a)",cex=.8)
+text(2.05,.85,"(p+1, a)",cex=.8)
+text(2.05,2.15,"(p+1, a+1)",cex=.8)
+text(.95,2.15,"(p, a+1)",cex=.8)
 #--------------------------------------
 
 
@@ -82,6 +91,13 @@ text(x1[1]-.05,y1[1]-.05,"A")
 text(x1[2]+.05,y1[2]-.05,"B")
 text(x1[3],y1[3]+.08,"C")
 text(x2[3],y2[3]+.08,"D",xpd=T)
+
+# label ABCD coords:
+text(x1[1]-.05,y1[1]-.25,bquote(bgroup("(",paste("p-",phantom(.), frac(a,2),", ",frac(a*sqrt(3),2),sep=""),")")),cex=.8)
+text(x1[2]+.05,y1[2]-.25,bquote(bgroup("(",paste("p+1-",phantom(.), frac(a,2),", ",frac(a*sqrt(3),2),sep=""),")")),xpd=TRUE,cex=.8)
+text(x1[2]-.18,y1[3]+.28,bquote(bgroup("(",paste("p+1-",phantom(.), frac(a+1,2),", ",frac(paste("(a+1)")*sqrt(3),2),sep=""),")")),cex=.8)
+text(x2[3]+.3,y2[3]+.28,bquote(bgroup("(",paste("p-",phantom(.), frac(a+1,2),", ",frac(paste("(a+1)")*sqrt(3),2),sep=""),")")),xpd=TRUE,cex=.8)
+
 
 # angle arc segments:
 makemeanarc <- function(thetas,xy){
@@ -152,4 +168,4 @@ segments(1.5,1.57,1.5,1.45,lty=3)
 segments(1.5,ysc+.02,1.5,1.14,lty=3)
 dev.off()
 
-
+# end of Figure1 code

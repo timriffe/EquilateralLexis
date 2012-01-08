@@ -32,7 +32,9 @@ EqLexis <- function(Rates,
 	
 	# define polygon plot function:
 	EQLexTriTiltLeft <- function(x,brks=breaks,cols=col,val=value){
-		coli <- cols[(brks-x[val]) >= 0][1]
+		#coli <- cols[(brks-x[val]) >= 0][1]
+		coli <- rev(cols[! (brks-x[value]) > 0])[1]
+		coli <- ifelse(x[Value]==0,NA,coli)
 		ys <- sin(pi/3)
 		# lower
 		if (diff(c(x["Age"],x["Year"]))==x["Cohort"]){

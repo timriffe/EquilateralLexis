@@ -1,5 +1,12 @@
+# This function renders the standard Lexis surface appearing in Figure 2
 
-# Author: triffe
+# it contains some arguments not used in that figure because this is a stripped down version
+# of SqLexis()- the more general function that will be included in a package for Lexis surfaces
+# sometime soon. 
+
+# the primary change is that this function requires an open graphics device, and it has an extra
+# argument, yshiftforpaper, that enabled putting the two surfaces on the same graphics device,
+# which is how I ensured a 1:1 scale.
 ###############################################################################
 
 SqLexisSp <- function(Rates, 
@@ -19,7 +26,11 @@ SqLexisSp <- function(Rates,
 	
 	# Standard Lexis coordinates:
 	LexTriPeriod <- function(x,Brks,Cols,Value,Yshiftforpaper){
-		coli <- Cols[(Brks-x[Value]) >= 0][1]		# lower
+		#coli <- Cols[(Brks-x[Value]) >= 0][1]		
+		coli <- rev(Cols[! (Brks-x[Value]) > 0])[1]
+		coli <- ifelse(x[Value]==0,NA,coli)
+		
+		# lower
 		if (diff(c(x["Age"],x["Year"]))==x["Cohort"]){
 			xcoord <- c(x["Year"],x["Year"]+1,x["Year"]+1)
 			ycoord <- c(x["Age"]+Yshiftforpaper,x["Age"]+Yshiftforpaper,x["Age"]+1+Yshiftforpaper)

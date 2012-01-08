@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{16}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,11 +10,35 @@ K.~Andreev.
 \newblock Overview of the program lexis 1.0.
 \newblock \emph{S. Heinzel and T. Plesser}, 1999.
 
+\bibitem[Arthur and Vaupel(1984)]{arthur1984some}
+W.B. Arthur and J.W. Vaupel.
+\newblock Some general relationships in population dynamics.
+\newblock \emph{Population index}, 50:\penalty0 214--226, 1984.
+
+\bibitem[{Human Fertility Database.}(2011)]{HFD2011}
+{Human Fertility Database.}
+\newblock {Max Planck Institute for Demographic Research (Germany) and Vienna
+  Institute of Demography (Austria)}, December 2011.
+\newblock URL \url{www.humanfertility.org}.
+
+\bibitem[Ihaka(2003)]{ihaka2003colour}
+R.~Ihaka.
+\newblock Colour for presentation graphics.
+\newblock In K.~Hornik and F.~Leisch, editors, \emph{Proceedings of the 3rd
+  International Workshop on Distributed Statistical Computing Vienna Austria},
+  2003.
+
 \bibitem[Ihaka and Gentleman(1996)]{ihaka1996r}
-R.~Ihaka and R.~Gentleman.
+Ross Ihaka and Robert Gentleman.
 \newblock R: a language for data analysis and graphics.
 \newblock \emph{Journal of computational and graphical statistics}, pages
   299--314, 1996.
+
+\bibitem[Ihaka et~al.(2011)Ihaka, Murrell, Hornik, and Zeileis]{colorspace2011}
+Ross Ihaka, Paul Murrell, Kurt Hornik, and Achim Zeileis.
+\newblock \emph{{colorspace}: Color Space Manipulation}, 2011.
+\newblock URL \url{http://CRAN.R-project.org/package=colorspace}.
+\newblock R package version 1.1-0.
 
 \bibitem[Keiding(2011)]{keiding2011age}
 N.~Keiding.
@@ -22,6 +46,29 @@ N.~Keiding.
   the basic differential equation.
 \newblock \emph{Canadian Journal of Statistics}, 39\penalty0 (3):\penalty0
   405--420, 2011.
+
+\bibitem[Lewin(1876)]{lewin1876rapport}
+J.~Lewin.
+\newblock Rapport sur la d{\'e}termination et le recueil des donn{\'e}es
+  relatives aux tables de mortalit{\'e}.
+\newblock \emph{Programme de la neuvi{\`e}me session du Congr{\`e}s
+  International de statistique {\`a} Budapest I}, pages 295--361, 1876.
+
+\bibitem[Lexis(1875)]{lexis1875einleitung}
+W.H.R.A. Lexis.
+\newblock \emph{Einleitung in die Theorie der Bev{\"o}lkerungsstatistik}.
+\newblock KJ Tr{\"u}bner, 1875.
+
+\bibitem[MATLAB(2010)]{MATLAB2010}
+MATLAB.
+\newblock \emph{version 7.10.0 (R2010a)}.
+\newblock The MathWorks Inc., Natick, Massachusetts, 2010.
+
+\bibitem[Perozzo(1880)]{perozzo1880della}
+L.~Perozzo.
+\newblock Della rappresentazione graphica di una collettivita di individui
+  nella successione del tempo.
+\newblock \emph{Annali di Statistica}, 12:\penalty0 1--16, 1880.
 
 \bibitem[Sarkar(2008)]{sarkar2008lattice}
 Deepayan Sarkar.
@@ -40,5 +87,19 @@ J.W. Vaupel, B.A. Gambill, and A.I. Yashin.
 \newblock \emph{Thousands of Data at a Glance: Shaded Contour Maps of
   Demographic Surfaces}.
 \newblock International Institute for Applied Systems Analysis, 1987.
+
+\bibitem[Wilmoth et~al.(2007)Wilmoth, Andreev, Jdanov, Glei, Boe, Bubenheim,
+  Philipov, Shkolnikov, and Vachon]{wilmoth2007methods}
+J.R. Wilmoth, K.~Andreev, D.~Jdanov, DA~Glei, C.~Boe, M.~Bubenheim,
+  D.~Philipov, V.~Shkolnikov, and P.~Vachon.
+\newblock Methods protocol for the human mortality database.
+\newblock \emph{University of California, Berkeley, and Max Planck Institute
+  for Demographic Research, Rostock}, 2007.
+
+\bibitem[Zeileis et~al.(2009)Zeileis, Hornik, and Murrell]{zeileis2009escaping}
+A.~Zeileis, K.~Hornik, and P.~Murrell.
+\newblock {Escaping RGBland: Selecting colors for statistical graphics}.
+\newblock \emph{Computational Statistics \& Data Analysis}, 53\penalty0
+  (9):\penalty0 3259--3270, 2009.
 
 \end{thebibliography}
