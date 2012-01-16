@@ -584,8 +584,37 @@ brks <- seq(0,.25,length=251)
 H <- seq(255,-60,length=6)
 L <- seq(75,15,length=6)
 L[1] <- 99
-makefig3(myfxHCLramp(H=H,C=98,L=L,N=50),myfxHCLramp(H=H,L=L,N=5),"HCLd")
+makefig2(myfxHCLramp(H=H,C=98,L=L,N=50),myfxHCLramp(H=H,L=L,N=5),"HCLd")
 
+L <- seq(40,100,length=26)
+bigleg(myfxHCLramp(H=H,C=98,L=L,N=5),brks=seq(0,.26,by=.01))
+makefig2(myfxHCLramp(H=H,C=98,L=L,N=50),myfxHCLramp(H=H,L=L,N=5),"HCLd")
 
+myfxHCLramp2 <- function(H,C=95,L,N=5,alpha){
+	if (missing(alpha)){
+		alpha <- rep(1,length(H))
+	}
+	if (length(C)==1){
+		C <- rep(C,length(H))
+	}
+	# H and L must be of equal length
+	colsi <- c()
+	for (i in 1:(length(H)-1)){
+		Hi <- seq(H[i],H[i+1],length=(N+1))
+		Hi[Hi<0] <- Hi[Hi<0]+360
+		colsi <- c(colsi,hcl(h=Hi,c=seq(C[i],C[i+1],length=(N+1)),l=seq(L[i],L[i+1],length=(N+1)),alpha=seq(alpha[i],alpha[i+1],length=(N+1)))[ifelse(i==1,1,2):(N+1)])
+	}
+	colsi
+}
+L <- seq(75,15,length=6) # L is luminance
+L[1] <- 99
+C<- seq(50,100,length=6)
 
-\
+par(mfrow=c(1,4))
+bigleg(myfxHCLramp2(H=H,C=98,L=L,N=5),brks=seq(0,.26,by=.01))
+bigleg(myfxHCLramp2(H=H,C=98,L=L,N=5,alpha=c(.3,1,1,1,1,1)),brks=seq(0,.26,by=.01))
+bigleg(myfxHCLramp2(H=H,C=C,L=L,N=5,alpha=c(.3,1,1,1,1,1)),brks=seq(0,.26,by=.01))
+
+makefig2(myfxHCLramp2(H=H,C=98,L=L,N=50),myfxHCLramp2(H=H,C=C,L=L,N=5),"HCLe")
+makefig2(myfxHCLramp2(H=H,C=98,L=L,N=50,alpha=c(.3,1,1,1,1,1)),myfxHCLramp2(H=H,C=98,L=L,N=5,alpha=c(.3,1,1,1,1,1)),"HCLf")
+makefig2(myfxHCLramp2(H=H,C=C,L=L,N=50,alpha=c(.3,1,1,1,1,1)),myfxHCLramp2(H=H,C=C,L=L,N=5,alpha=c(.3,1,1,1,1,1)),"HCLg")
