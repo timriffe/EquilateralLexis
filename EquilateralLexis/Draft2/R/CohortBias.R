@@ -70,10 +70,9 @@ getKingMean <- function(M){
       M[3:nrow(M),3:ncol(M)] ) / 9
 }
 
-
 # function to display areas with order-switching
 
-ShowMajorDistortions <- function(Code = "CZE", RR, AC){
+ShowMajorDistortions <- function(Code = "CZE", RR, AC, plot = TRUE){
   Distort       <- acast(AC[AC$Code == Code, ],Age~Year,value.var = "Distort")
   ACdiff        <- acast(AC[AC$Code == Code, ],Age~Year,value.var = "Diff")
   APdiff        <- acast(RR[RR$Code == Code, ],Age~Year,value.var = "Diff")[,-c(1:2)]
@@ -81,19 +80,65 @@ ShowMajorDistortions <- function(Code = "CZE", RR, AC){
   Distort       <- Distort[,colSums(!is.na(Distort)) != 0][,-1]
   APking        <- getKingMean(APdiff)
   ACking        <- getKingMean(ACdiff)
-  Distrortking  <- getKingMean(Distort)
+  Distortking  <- getKingMean(Distort)
   
-  G <- ACking > APking & Distrortking < APking
-  L <- ACking < APking & Distrortking > APking
+  G <- ACking > APking & Distortking < APking
+  L <- ACking < APking & Distortking > APking
+  if (plot){
+      LexisMap(G - L, log = FALSE)
+  }
   
-  LexisMap(G - L, log = FALSE)
-  
+  invisible(list(G=G,L=L))
+}
+
+polygon.list <- function(PolyList, ...){
+    lapply(PolyList, function(X, ...){
+              polygon(x=X[,"x"],y=X[,"y"],...)  
+            },...)
+    invisible(NULL)
 }
 
 
-ShowMajorDistortions("CZE",RR, AC)
+DistortedPolygonList <- function(Code = "CZE", RR, AC){
+    require(sp)
+    require(rgeos)
+    
+    OrderFlop <- ShowMajorDistortions(Code, RR, AC, FALSE)
+    
+    MAT     <- OrderFlop$G | OrderFlop$L
+    Years   <- as.integer(colnames(MAT))
+    Ages    <- as.integer(rownames(MAT))
+    x5      <- x4 <- x1 <- col(MAT)[MAT] + min(Years)
+    x2      <- x1 - 1
+    x3      <- x2
+    y5      <- y2 <- y1 <- row(MAT)[MAT] + min(Ages)
+    y3      <- y4 <- y1 - 1
+    
+    x       <- cbind(x1, x2, x3, x4, x5)
+    y       <- cbind(y1, y2, y3, y4, y5)
+    
+    Rects <- SpatialPolygons(lapply(1:nrow(x), function(i,x,y){
+                        Polygons(list(Polygon(cbind(x=x[i,],y=y[i,]),hole=FALSE)),i)
+                        
+                    },x=x,y=y))
+    
+    PolyList <- lapply(gUnionCascaded(Rects)@polygons[[1]]@Polygons,function(X){
+                if (!X@hole)
+                    X@coords
+            })
+    PolyList
+}
 
-# well this works fine, now it'll just be a matter of drawing a border around the affected areas.
-# this can be done with single segments. Will require matrix trickery and thought. Hmmm.
-
+PolyList <- DistortedPolygonList(Code = "CZE", RR, AC)
+APrates <- acast(RR[RR$Code == "CZE", ],Age~Year,value.var = "ASFR")
+library(RColorBrewer)
+library(grDevices)
+yrs   <- as.integer(colnames(APrates))
+ages  <- as.integer(rownames(APrates))
+image(yrs+.5,ages+.5,t(APrates),
+        col = colorRampPalette(rev(brewer.pal(9, "Spectral")), space = "Lab")(100),
+        breaks=seq(0,.25,by=.0025),
+        ylim=range(ages)+c(0,1),xlim=range(yrs)+c(0,1), asp = 1)
+contour(yrs+.5,ages+.5,t(APrates),breaks=seq(0,.25,by=.025),add=TRUE)
+polygon.list(PolyList, col = "#55555530",border="magenta")
 
