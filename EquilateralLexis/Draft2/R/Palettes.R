@@ -71,7 +71,7 @@ V <- 1
 pal(rgb(red=as(HSV(H,S,V),"RGB")@coords))
 pal(rgb(red=as(HSV(H,S,V),"RGB")@coords))
 HSV(H,S,V)
-?hsv
+
 n <- 20;  y <- -sin(3*pi*((1:n)-1/2)/n)
 op <- par(mar=rep(1.5,4))
 plot(y, axes = FALSE, frame.plot = TRUE,
