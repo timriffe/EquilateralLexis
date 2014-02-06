@@ -1,5 +1,6 @@
 % setwd("E://CODE//EquilateralLexis//")
 % setwd("/home/triffe/git/EquilateralLexis/EquilateralLexis")
+% jghjSweave("/home/triffe/git/EquilateralLexis/EquilateralLexis/Draft2/EquilateralLexis.Rnw")
 \documentclass[a4paper]{article}
 \usepackage{amsmath}
 \usepackage{natbib}
@@ -44,7 +45,7 @@ The \textit{Lexis} diagram conforms to a set of principles on orientation and pr
 These conventions conform to demographers' 'data-intuition', as demographic data are typically collected annually, and the most-used indicators are period indicators. A clear right angle between period and age lends itself to illustrating period indicators, and cohort dimension distortion is largely innocuous when drawn as a diagram in outline form. This is because when drawn as an outline, the diagram does not represent data values, but rather data structure and relations.
 
 \subsection*{Cohort distortion in APC demographic surfaces}
-Modern computing has facilitated the visualization of large tables of demographic rates cross-classified by age, period and cohort using surface plots, an idea popularized by \citet{arthur1984some}. Software packages have been designed to do this with demographic data, such as \texttt{LEXIS} by \citet{vaupel1987thousands} or the \texttt{Lexis} program by \citet{andreev1999overview}, which recognize and graphically represent the inherent triple-classification of the underlying data. A variety of general surface functions for gridded data (e.g., age-period only) in widely used statistical programming languages\footnote{such as \texttt{levelplot()} in the \texttt{lattice} package \citep{sarkar2008lattice} for gridded data in the R language \citep{ihaka1996r}, or the \texttt{contourf()} function in \texttt{MATLAB} \citep{MATLAB2010}, among many others.} that can be coerced to accurately represent standard demographic surfaces. Surface plots produced in this line have followed the design principles of the \textit{Lexis} diagram, entailing distortion of the cohort dimension in favor of a right angle between the age and period dimensions\footnote{rearranging the data, a less common rendering of age in the y-axis and cohort in the x-axis with a unity aspect ratio has also been done, in which case the period dimension is stretched by the same amount.}.
+Modern computing has facilitated the visualization of large tables of demographic rates cross-classified by age, period and cohort using surface plots, an idea popularized by \citet{arthur1984some}. Software packages have been designed to do this with demographic data, such as \texttt{LEXIS} by \citet{vaupel1987thousands} or the \texttt{Lexis} program by \citet{andreev1999overview}, which recognize and graphically represent the inherent triple-classification of the underlying data. A variety of general surface functions for gridded data (e.g., age-period only) in widely used statistical programming languages\footnote{such as \texttt{levelplot()} in the \texttt{lattice} package \citep{sarkar2008lattice} for gridded data in the R language \citep{ihaka1996r}, or the \texttt{contourf()} function in \texttt{MATLAB} \citep{MATLAB2010}, among many others.} that can be coerced to accurately represent standard demographic surfaces. Surface plots produced in this lineage have followed the design principles of the \textit{Lexis} diagram, entailing distortion of the cohort dimension in favor of a right angle between the age and period dimensions\footnote{rearranging the data, a less common rendering of age in the y-axis and cohort in the x-axis with a unity aspect ratio has also been done, in which case the period dimension is stretched by the same amount.}.
 
 To illustrate the nature of this bias, consider a line graph, for instance a log mortality curve over age. Figure~\ref{}
 \begin{figure}[ht!]
@@ -66,7 +67,7 @@ The arithmetic required to transform standard \textit{Lexis} surface coordinates
 \centering
 \includegraphics[width=12cm,height=6cm]{Figs/Figure1.pdf}
 \caption{Standard \textit{Lexis} versus equilateral coordinates.}
-\label{Fig1}
+\label{Fig0}
 \end{figure}
 
 The segment AD marks the beginning of year $p$, and BC marks year $p+1$ in both diagrams. In the equilateral depiction, however, years slant upward and to the left at 120$^\circ$. The age dimension is read horizontally in both depictions, segments AB ($a$) and DC ($a+1$), and its length remains 1. Segment AC marks cohort $c$ in both depictions, dividing the upper triangle ACD (when $p-c-a=1$) from the lower triangle ABC (when $p-a=c$). Segment AC changes its angle from 45$^\circ$ in the standard depiction to 60$^\circ$ in the equilateral depiction. Importantly, its length changes from $\sqrt{2}$ in the standard drawing to 1 in the equilateral drawing, which is the entire justification for this transform.\\ 
