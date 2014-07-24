@@ -87,7 +87,14 @@ The equilateral demographic surface in Figure~\ref{Fig2} resembles the better-kn
 The color scale used in Figure~\ref{Fig2} also adds value by interpolating over the HCL color space \citep{ihaka2003colour, colorspace2011} rather than the more frequently used RGB or HSV color spaces, either of which would entail irregularly perceived color intensity, potentially leading to false edges or other optical illusions \citep{zeileis2009escaping}. This HCL ramp equalizes perceived distance between colors by forcing a uniform colorfulness (chroma) and equidistant hues. An approximately linear luminance gradient ensures that the surface remains intelligible, albeit less sharp, both for color blind viewers and on grey scale devices. Further work is needed to establish best practices for the use of color in demographic surfaces in general and the most frequently used subtypes of APC surfaces, i.e. mortality and fertility, in particular.
 
 \subsection*{Conclusions}
-Equilateral Lexis surfaces overcome the problem of cohort distortion found in standard APC surfaces, and they are worth consideration for use in both diagnostic and didactic settings, minimally for the sake of comparison. The small tweak to the cohort dimension that sparked this endeavor has not been overlooked in recent applications of \textit{Lexis} diagrams, but the coordinate transform presented here appears never to have been implemented for APC demographic surfaces. The R code used to create the surfaces in Figure~\ref{Fig2} is freely available in the online appendices to this paper, and an R package for making both standard and equilateral demographic surfaces is currently in preparation.
+Equilateral Lexis surfaces overcome the problem of cohort distortion found in
+standard APC surfaces, and they are worth consideration for use in both
+diagnostic and didactic settings, minimally for the sake of comparison. The
+small tweak to the cohort dimension that sparked this endeavor has not been
+overlooked in recent applications of \textit{Lexis} diagrams, but the coordinate
+transform presented here appears never to have been implemented for APC
+demographic surfaces, save for the original work of \textit{perozzo1880della}. The R code used to
+create the surfaces in Figure~\ref{Fig2} is freely available in the online appendices to this paper, and an R package for making both standard and equilateral demographic surfaces is currently in preparation.
 
 \bibliographystyle{plainnat}
 \bibliography{References.bib}   
