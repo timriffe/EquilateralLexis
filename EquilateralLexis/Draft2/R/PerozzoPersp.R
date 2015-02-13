@@ -10,8 +10,8 @@ library(DemogBerkeley)
 # Figure out how to superimpose red lines. 
 #pass <- userInput()
 #user <- userInput()
-SWE  <- readHMDweb("SWE","Population5",username = user, password = pass)
-B    <- readHMDweb("SWE","Births",username = user, password = pass)
+SWE  <- readHMDweb("SWE","Population5",username = us, password = pw)
+B    <- readHMDweb("SWE","Births",username = us, password = pw)
 B    <- B[B$Year >= 1750 & B$Year < 1880, ]
 BS   <- rev(tapply(B$Male, B$Year - B$Year %% 5, sum))
 # population matrix
@@ -149,7 +149,7 @@ Right <- makeTriangles(Rv1, Rv2, Rv3,
 
 par(mai=c(.1,.1,.1,.1), xaxs = "i", yaxs= "i")
 PERR <- drawScene(list(BACK,TRI,Right), 
-  screen=list(x=260, y=150, z=0), 
+  screen=list(x=260, y=150, z=-2), 
   perspective = FALSE,
   aspect=c(1/(sqrt(3)/2),1),
   #lighting=perspLighting,
@@ -159,7 +159,7 @@ drawScene(list(BACK,TRI,Right),
         screen=list(x=265, y=155, z=-2), 
         perspective = TRUE,
         aspect=c(1/(sqrt(3)/2),1),
-        distance = .05)
+        distance = 0)
 
 PERR <- drawScene(list(TRI,BACK), 
         screen=list(x=0, y=0, z=0), 
