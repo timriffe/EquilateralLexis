@@ -1,11 +1,9 @@
 
-library(DemogBerkeley)
+library(HMDHFDplus)
 library(LexisUtils)
 library(reshape2)
-user <- userInput()
-# wait to do above before running next line
-pw <- userInput()
-mltper <- readHMDweb("USA","mltper_1x1",user,pw)
+
+mltper <- readHMDweb("USA","mltper_1x1",username=us,password=pw)
 
 mx <- acast(mltper,Age~Year,value.var="mx")
 LexisMap(mx)
@@ -27,10 +25,10 @@ image(x.5,y.5,t(mx),xlim=c(1933,2011),ylim=c(0,111), col=cols(length(levs)-1), b
 invisible(lapply(line.list, templines))
 
 mxac <- AP2AC(mx)
-range(colnames(mxac))
-xcs <- 1822:2009 + .5
+rg <- as.integer(range(colnames(mxac)))
+xcs <- rg[1]:rg[2] + .5
 line.list <- contourLines(x=xcs, y=y.5, t(mxac),levels=levs)
-image(xcs,y.5,t(mxac),xlim=c(1822,2010),ylim=c(0,111), col=cols(length(levs)-1), breaks=levs,useRaster=TRUE)
+image(xcs,y.5,t(mxac),xlim=rg+c(0,1),ylim=c(0,111), col=cols(length(levs)-1), breaks=levs,useRaster=TRUE)
 invisible(lapply(line.list, templines))
 
 # now for the equilateral translation:
@@ -51,7 +49,7 @@ y <- c(rbind(y0,y0,y0+sqrt(3)/2,y0+sqrt(3)/2,NA))
 colsEq <- c(as.character(cut(mx,breaks=levs,labels=cols(length(levs)-1))))
 
 par(mai=c(0,0,0,0),xaxs="i",yaxs="i")
-plot(NULL,type="n",xlim=c(1880,2010),ylim=c(0,111*sqrt(3)/2),axes=FALSE,xlab="",ylab="",asp=1)
+plot(NULL,type="n",xlim=range(x,na.rm=TRUE),ylim=c(0,111*sqrt(3)/2),axes=FALSE,xlab="",ylab="",asp=1)
 polygon(x,y,col=colsEq,border=NA)
 invisible(lapply(lineseq, templines,col="#55555540"))
 
