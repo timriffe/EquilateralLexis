@@ -6,7 +6,8 @@ library(raster) # will require rgeos, which is an external program!
 library(ggplot2)
 library(HMDHFDplus)
 library(reshape2)
-
+library(spatstat)
+library(colorspace)
 # TR
 # Many of these functions are recycled/retooled, from stuff used in previous papers and projects.
 # I think I have 3 or 4 absolutely different versions of LexRefN()! This one just returns a list.
@@ -96,25 +97,24 @@ LexRefN <- function(ages, years, N = 5, increasing = TRUE, equilateral = FALSE){
 #'
 #' @title produces a ramp function based on Brewer palettes
 #' 
-#' @description This takes a vector of colors from one of the \code{RColorBrewer} palettes and gives back \code{N} colors interpolated over these, through the \code{Lab} space.
+#' @description This takes a vector of colors from one of the \code{RColorBrewer} palettes and gives back a ramp interpolator (Lab space).
 #' 
-#' @param N how many colors do you want?
 #' @param bp which palette? Make it a continuous one!
 #' @param rev.pal logical, should the ordering of the selected palette be reversed?
 #' 
-#' @value a vector of N colors given as character strings in hex format.
+#' @value a ramp function.
 #' 
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom grDevices colorRampPalette
 #' 
 #' @export
-ramp <- function(N,bp = "YlOrRd",rev.pal=FALSE){
+ramp <- function(bp = "YlOrRd",rev.pal=FALSE){
 	col.base <- brewer.pal(brewer.pal.info[bp,]$maxcolors,bp)
 	if (rev.pal){
 		col.base <- rev(col.base)
 	}
-	colorRampPalette(col.base,space="Lab")(N)
+	colorRampPalette(col.base,space="Lab")
 }
 
 #'
@@ -131,8 +131,9 @@ ramp <- function(N,bp = "YlOrRd",rev.pal=FALSE){
 
 # this is different from ggplot2::fortify because it saves the area. colnames also different.
 myfortify <- function(p){
-	do.call(rbind,lapply(p@polygons, function(x){
-						ID <- x@ID
+	do.call(rbind,lapply(1:length(p@polygons), function(i,p){
+						x <- p@polygons[[i]]
+						ID <- p@data[i,"layer"]
 						xy <- lapply(x@Polygons, function(y){
 									XY <- as.data.frame(y@coords)
 									XY <- rbind(XY,NA)
@@ -146,11 +147,11 @@ myfortify <- function(p){
 							xy[[i]]$group <- paste(ID,i,sep=".")
 						}
 						do.call(rbind,xy)
-					}))
+					},p=p))
 } 
 # prelog if necessary, X is an AP matrix of data
-
-LexisPoly <- function(X, breaks = NULL, ramp, equilateral = FALSE, N = 10){
+#colramp <- ramp("BuGn")
+LexisPoly <- function(X, breaks = NULL, colramp = ramp(), equilateral = FALSE, N = 10){
 	if (is.null(breaks)){
 		breaks <- pretty(X)
 	}
@@ -159,21 +160,47 @@ LexisPoly <- function(X, breaks = NULL, ramp, equilateral = FALSE, N = 10){
 	Years  			<- as.integer(colnames(X))
 	# get some contour lines, just in case. May need to do eq transform.
 	Lines  			<- contourLines(Years+.5, Ages+.5, t(X), levels = breaks)
+	
+	#XX <- cut(X,breaks=breaks,labels=colramp(length(breaks)-1))
+	#dim(XX) <- dim(X)
 	# turn it into a raster-class object
 	r      			<- raster(X[nrow(X):1,],
 							xmn = min(Years), xmx = max(Years) + 1, 
 							ymn = min(Ages), ymx = max(Ages) + 1)
 	# (there is a special method to cut intervals for raster classes)
-	z      			<- cut(r, breaks) 
-	# now combine cells within-intervals to single polygons
-	p      			<- rasterToPolygons(z, dissolve = TRUE)
-	# now convert back into manageable data.frame (Easier to manipulate than s4 object)
-	pl     			<- myfortify(p)
-	# N colors-- if reverse ramp needed, then make ramp function work that way
-	colors 			<- ramp(length(unique(pl$ID)), )
+	z      			<- cut(r, breaks = breaks, right = FALSE) 
 	
+	
+	# TR bug here: need to save intervals to be able to assign color properly!
+	# either this happens in the cut() or rasterToPolygons() steps... Possibly ask on SO
+	# if this turns out to be beyond me. Look at underlaying functions...
+	# now combine cells within-intervals to single polygons
+	# slower, but gets the IDs right...
+	
+#	plist <- lapply(unique(z@data@values),function(id,z){
+#		pii 	<- rasterToPolygons(z, fun = function(x){x==id}, dissolve = TRUE)
+#		rownames(pii@data)
+#		# convert to data.frame
+#		pli     <- myfortify(pii)
+#		pli$ID  <- id
+#		pli
+#	}, z = z)
+## combine to long data.frame
+#pl                  <-  do.call(rbind, plist)
+    p     <- rasterToPolygons(z, dissolve = TRUE)
+	pl    <- myfortify(p)
+	# N colors-- if reverse ramp needed, then make ramp function work that way
+	colors 			<- colramp(length(unique(pl$ID)))	
+	# take a little break here to assign shades of grey to contour lines based on surrounding
+	# colors. This is a tricky line of code
+	neighb.colors <- colors[cumsum(diff(unlist(lapply(Lines,"[[","level"))) > 0)]
+	contour.colors <- ifelse(colorspace::hex2RGB(spatstat::to.grey(neighb.colors))@coords[, 1] < .65,gray(.8),gray(.2))
+	for (i in 1:length(contour.colors)){
+		Lines[[i]][["col"]] <- contour.colors[i]
+	}
 	# ordering works because polygons formed in order of intervals, given by breaks
 	pl$color 		<- colors[as.integer(pl$ID)]
+	
 	
     # now get plot order, plot in descending order of area..
 	areas 			<- sapply(unique(pl$group), function(gp,pl){
@@ -187,6 +214,7 @@ LexisPoly <- function(X, breaks = NULL, ramp, equilateral = FALSE, N = 10){
 	pl$plotOrder 	<- orders[pl$group]
 	# order by plotOrder, so all polygons drawn simultaneously (NA-separated)
 	pl 				<- pl[with(pl, order(plotOrder, Order)), ]
+
 	# remove holes (works because we plot in decreasing order of polygon size)
 	pl 				<- pl[!pl$hole, ]
 	# now to include axes, Lexis grids, etc.
@@ -249,7 +277,7 @@ LexisPoly <- function(X, breaks = NULL, ramp, equilateral = FALSE, N = 10){
     LexisP
 }
 
-x <- LexisP
+
 plot.LexisPoly <- function(x, contour = FALSE,refs = TRUE, border = NA, add = FALSE, ...){
 	equilateral <- x$equilateral
 	
@@ -263,7 +291,10 @@ plot.LexisPoly <- function(x, contour = FALSE,refs = TRUE, border = NA, add = FA
     }
 	# color regions
 	polygon(x$Polygons$x, x$Polygons$y, col = x$Polygons$color[x$Polygons$Order==1], border = border, ...)
-	#polygon(x$Polygons$x, x$Polygons$y, col = x$Polygons$color[x$Polygons$Order==1], border = border)
+	
+	# bounding box
+	polygon(x$bbox$x,x$bbox$y)
+	
 	if (refs){
 		# Vertical
 		segments(x$Refs$Vertical$x1,
@@ -291,37 +322,45 @@ plot.LexisPoly <- function(x, contour = FALSE,refs = TRUE, border = NA, add = FA
 	# contour lines
 	if (contour){
 		templines <- function(clines,...) {
-			lines(clines[[2]], clines[[3]],...)
+			lines(clines[[2]], clines[[3]],col=clines$col, ...)
 		}
-		invisible(lapply(x$Contours, templines, col = "white"))
+		invisible(lapply(x$Contours, templines))
 	}
 	par(xpd=TRUE)
 	# now draw axes. depends on eq
-	if (! equilateral){
-		# x axis, period
-		yrticks <- x$Years - x$Years %% 10
-		segments(min(x$Years),x$Ages[1],max(x$Years),x$Ages[1])
-		segments(yrticks,x$Ages[1],yrticks,x$Ages[1]-1)
-		# y axis, age
-		ageticks <- x$Ages - x$Ages %% 10
-		segments(min(x$Years),x$Ages[1],max(x$Years),x$Ages[1])
-		segments(min(x$Years),ageticks,min(x$Years),ageticks)
-	} else {
-		
-	}
-
+    segments(x$Ticks$xat,x$Ticks$x0,x$Ticks$xat,x$Ticks$x0-1)
+	text(x$Ticks$xat,x$Ticks$x0,x$Ticks$xlabs,pos=1,cex=.8)
+	segments(x$Ticks$y0,x$Ticks$yat,x$Ticks$y0-1,x$Ticks$yat)
+	text(x$Ticks$y0,x$Ticks$yat,x$Ticks$ylabs,pos=2,cex=.8)
 }
 
 
 names(LexisP)
-X <- acast(readHMDweb("USA","mltper_1x1",us,pw),Age~Year,value.var="mx")
+
+#pl 			  	<- pl[!pl$hole,]
+
+
+# a couple mortality surfaces:
+mort <- acast(readHMDweb("USA","mltper_1x1",us,pw),Age~Year,value.var="mx")
 
 breakse10 <- 1/(10^(0:4))
 breaksmid <- exp(log(breakse10)[-5] + diff(log(breakse10)) / 2)
 breaks    <- sort(c(breaksmid,breakse10))
 
-#pl 			  	<- pl[!pl$hole,]
+# standard:
+mort_rt <- LexisPoly(mort,breaks,ramp(),equilateral = FALSE)
+plot(mort_rt,contour=TRUE)
+# equilateral:
+mort_eq <- LexisPoly(mort,breaks,ramp(),equilateral = TRUE)
+plot(mort_eq,contour=TRUE)
 
-LexisP <- LexisPoly(X,breaks,ramp,equilateral = FALSE)
-plot(LexisP,border=NA,contour=TRUE)
+# now two fertility surfaces
+fert <- acast(readHFDweb("USA","asfrRR",us,pw),Age~Year,value.var="ASFR")
+range(fert)
+pretty(fert)
+breaks <- seq(0,.3,by=.025)
 
+ASFR_rt   <- LexisPoly(fert,breaks,ramp("BuGn"),equilateral = FALSE)
+plot(ASFR_rt,contour=TRUE)
+plot(p,breaks=breaks,col=colramp(length(breaks)-1))
+plot(1:length(breaks),1:length(breaks),pch=19,cex=3,col=(colramp(length(breaks))))
