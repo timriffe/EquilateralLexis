@@ -2,6 +2,8 @@
 # Author: tim
 ###############################################################################
 
+# dependencies
+# ----------------------------------------------
 # will require rgeos, which is an external program!
 # in general you don't need rgeos in this package, but we need it
 # for rasterToPolygons(,dissolve = TRUE) in order to join matrix elements into map polygons.
@@ -17,6 +19,8 @@ library(reshape2)
 library(RColorBrewer)
 library(spatstat)
 library(colorspace) 
+
+# -----------------------------------------------
 # TR
 # Many of these functions are recycled/retooled, from stuff used in previous papers and projects.
 # I think I have 3 or 4 absolutely different versions of LexRefN()! This one just returns a list.
@@ -361,7 +365,11 @@ plot.LexisPoly <- function(x, contour = FALSE,refs = TRUE, border = NA, add = FA
 }
 
 
-names(LexisP)
+#
+print.LexisPoly <- function(x, contour = FALSE, refs = TRUE, border = NA, ...){
+	plot.LexisPoly(x, contour = contour, refs = refs, border = border, add = FALSE, ...)
+}
+
 
 #pl 			  	<- pl[!pl$hole,]
 noInternet <- FALSE
@@ -382,6 +390,11 @@ breakse10 <- 1/(10^(0:4))
 breaksmid <- exp(log(breakse10)[-5] + diff(log(breakse10)) / 2)
 breaksm    <- sort(c(breaksmid, breakse10))
 
+
+# note: if assigning, the default print method is not activated, but you can run
+# without assigning and it uses the defaults. Otherwise, print() and plot() behave in the
+# same ways.
+
 # standard:
 mort_rt <- LexisPoly(mort, breaksm, ramp(), equilateral = FALSE)
 plot(mort_rt, contour = TRUE)
@@ -398,4 +411,6 @@ plot(ASFR_rt, contour = TRUE)
 
 ASFR_eq   <- LexisPoly(fert, breaksf, ramp("BuGn"), equilateral = TRUE)
 plot(ASFR_eq, contour = TRUE)
-fert
+
+A <- graphics::contour(fert,levels=breaksf)
+?graphics::contour
