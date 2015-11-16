@@ -1,13 +1,22 @@
 
 # Author: tim
 ###############################################################################
-library(RColorBrewer)
-library(raster) # will require rgeos, which is an external program!
-library(ggplot2)
-library(HMDHFDplus)
+
+# will require rgeos, which is an external program!
+# in general you don't need rgeos in this package, but we need it
+# for rasterToPolygons(,dissolve = TRUE) in order to join matrix elements into map polygons.
+library(raster) 
+
+# to grab data live- it's on CRAN now
+library(HMDHFDplus) 
+
+# for jumping to matrices
 library(reshape2)
+
+# all three for color functions
+library(RColorBrewer)
 library(spatstat)
-library(colorspace)
+library(colorspace) 
 # TR
 # Many of these functions are recycled/retooled, from stuff used in previous papers and projects.
 # I think I have 3 or 4 absolutely different versions of LexRefN()! This one just returns a list.
@@ -26,7 +35,7 @@ library(colorspace)
 #' 
 #' @export
 #' 
-
+# TODO: make this function produce TAL diagrams too.
 LexRefN <- function(ages, years, N = 5, increasing = TRUE, equilateral = FALSE){
 	# vertical
 	#par(mai=c(.5, .5, .5, .5), xaxs = "i", yaxs = "i")
@@ -93,7 +102,7 @@ LexRefN <- function(ages, years, N = 5, increasing = TRUE, equilateral = FALSE){
 }
 
 
-# a handy color ramp function, pulls from Brewer
+# a handy color ramp function, pulls from Brewer. See use in code.
 #'
 #' @title produces a ramp function based on Brewer palettes
 #' 
@@ -129,7 +138,8 @@ ramp <- function(bp = "YlOrRd",rev.pal=FALSE){
 #' 
 #' @export
 
-# this is different from ggplot2::fortify because it saves the area. colnames also different.
+# this is different from ggplot2::fortify because it saves the area. colnames also different. 
+# actually it's only inspired by the output of fortify() for polygons.
 myfortify <- function(p){
 	do.call(rbind,lapply(1:length(p@polygons), function(i,p){
 						x <- p@polygons[[i]]
@@ -147,10 +157,14 @@ myfortify <- function(p){
 							xy[[i]]$group <- paste(ID,i,sep=".")
 						}
 						do.call(rbind,xy)
-					},p=p))
+					}, p = p))
 } 
 # prelog if necessary, X is an AP matrix of data
-#colramp <- ramp("BuGn")
+#colramp <- ramp("BuGn"); X <- fert;equilateral = FALSE; N = 10; breaks <- breaksf
+
+#' produces a LexisP object from a matrix of values
+#' 
+#' @description Given a matrix whose row and column names indicate lower interval bounds for two different measures of demographic time (e.g., Age in rows, years in columns), calculate polygons based on break points, and assign them colors. We can choose to project in the standard way, or in equilateral fashion (if the matrix has another derivable measure).
 LexisPoly <- function(X, breaks = NULL, colramp = ramp(), equilateral = FALSE, N = 10){
 	if (is.null(breaks)){
 		breaks <- pretty(X)
@@ -168,8 +182,15 @@ LexisPoly <- function(X, breaks = NULL, colramp = ramp(), equilateral = FALSE, N
 							xmn = min(Years), xmx = max(Years) + 1, 
 							ymn = min(Ages), ymx = max(Ages) + 1)
 	# (there is a special method to cut intervals for raster classes)
-	z      			<- cut(r, breaks = breaks, right = FALSE) 
-	
+	#z      			<- cut(r, breaks = breaks, right = FALSE) 
+	Z               <- cut(X, breaks = breaks, right = FALSE)
+	levels(Z)       <- 1:nlevels(Z)
+	Z               <- as.integer(as.character(Z))
+	Z               <- breaks[-length(breaks)][Z]
+	dim(Z)          <- dim(X)
+	r      			<- raster(Z[nrow(Z):1,],
+			xmn = min(Years), xmx = max(Years) + 1, 
+			ymn = min(Ages), ymx = max(Ages) + 1)
 	
 	# TR bug here: need to save intervals to be able to assign color properly!
 	# either this happens in the cut() or rasterToPolygons() steps... Possibly ask on SO
@@ -185,21 +206,26 @@ LexisPoly <- function(X, breaks = NULL, colramp = ramp(), equilateral = FALSE, N
 #		pli$ID  <- id
 #		pli
 #	}, z = z)
+	
+	# TR: still need to verify that layers correspond to correct intervals.
 ## combine to long data.frame
 #pl                  <-  do.call(rbind, plist)
-    p     <- rasterToPolygons(z, dissolve = TRUE)
+    p     <- rasterToPolygons(r, dissolve = TRUE)
+	
+	
 	pl    <- myfortify(p)
 	# N colors-- if reverse ramp needed, then make ramp function work that way
-	colors 			<- colramp(length(unique(pl$ID)))	
+	colors 			<- colramp(length(breaks) - 1)	
+	names(colors)   <- breaks[-length(breaks)]
 	# take a little break here to assign shades of grey to contour lines based on surrounding
-	# colors. This is a tricky line of code
-	neighb.colors <- colors[cumsum(diff(unlist(lapply(Lines,"[[","level"))) > 0)]
+	# colors. This is a tricky line of code. 
+	neighb.colors  <- colors[as.character(unlist(lapply(Lines,"[[","level")))]
 	contour.colors <- ifelse(colorspace::hex2RGB(spatstat::to.grey(neighb.colors))@coords[, 1] < .65,gray(.8),gray(.2))
 	for (i in 1:length(contour.colors)){
 		Lines[[i]][["col"]] <- contour.colors[i]
 	}
 	# ordering works because polygons formed in order of intervals, given by breaks
-	pl$color 		<- colors[as.integer(pl$ID)]
+	pl$color 		<- colors[as.character(pl$ID)]
 	
 	
     # now get plot order, plot in descending order of area..
@@ -338,29 +364,38 @@ plot.LexisPoly <- function(x, contour = FALSE,refs = TRUE, border = NA, add = FA
 names(LexisP)
 
 #pl 			  	<- pl[!pl$hole,]
-
+noInternet <- FALSE
+if (noInternet){
+DataNoInternet <- local(get(load("/home/tim/git/ThanoRepro/ThanoRepro/Data/DataAll.Rdata")))
+mort <- acast(DataNoInternet[DataNoInternet$Code == "USA" & DataNoInternet$Sex == "m", ], Age~Year, value.var = "mx")
+fert <- acast(DataNoInternet[DataNoInternet$Code == "USA" & DataNoInternet$Sex == "f", ], Age~Year, value.var = "Fx")
+fert <- fert[as.character(12:55),]
+fert <- fert[,colSums(fert)>0]
+} else {
 
 # a couple mortality surfaces:
-mort <- acast(readHMDweb("USA","mltper_1x1",us,pw),Age~Year,value.var="mx")
+mort <- acast(readHMDweb("USA", "mltper_1x1", us, pw), Age ~ Year, value.var = "mx")
+fert <- acast(readHFDweb("USA", "asfrRR", us, pw), Age ~ Year, value.var = "ASFR")
+}
 
 breakse10 <- 1/(10^(0:4))
 breaksmid <- exp(log(breakse10)[-5] + diff(log(breakse10)) / 2)
-breaks    <- sort(c(breaksmid,breakse10))
+breaksm    <- sort(c(breaksmid, breakse10))
 
 # standard:
-mort_rt <- LexisPoly(mort,breaks,ramp(),equilateral = FALSE)
-plot(mort_rt,contour=TRUE)
+mort_rt <- LexisPoly(mort, breaksm, ramp(), equilateral = FALSE)
+plot(mort_rt, contour = TRUE)
 # equilateral:
-mort_eq <- LexisPoly(mort,breaks,ramp(),equilateral = TRUE)
-plot(mort_eq,contour=TRUE)
+mort_eq <- LexisPoly(mort, breaksm, ramp(), equilateral = TRUE)
+plot(mort_eq, contour = TRUE)
 
 # now two fertility surfaces
-fert <- acast(readHFDweb("USA","asfrRR",us,pw),Age~Year,value.var="ASFR")
-range(fert)
-pretty(fert)
-breaks <- seq(0,.3,by=.025)
 
-ASFR_rt   <- LexisPoly(fert,breaks,ramp("BuGn"),equilateral = FALSE)
-plot(ASFR_rt,contour=TRUE)
-plot(p,breaks=breaks,col=colramp(length(breaks)-1))
-plot(1:length(breaks),1:length(breaks),pch=19,cex=3,col=(colramp(length(breaks))))
+breaksf <- seq(0, .3, by = .025)
+
+ASFR_rt   <- LexisPoly(fert, breaksf, ramp("BuGn"), equilateral = FALSE)
+plot(ASFR_rt, contour = TRUE)
+
+ASFR_eq   <- LexisPoly(fert, breaksf, ramp("BuGn"), equilateral = TRUE)
+plot(ASFR_eq, contour = TRUE)
+fert
