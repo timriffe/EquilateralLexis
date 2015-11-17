@@ -9,8 +9,6 @@
 # for rasterToPolygons(,dissolve = TRUE) in order to join matrix elements into map polygons.
 library(raster) 
 
-# to grab data live- it's on CRAN now
-library(HMDHFDplus) 
 
 # for jumping to matrices
 library(reshape2)
@@ -27,7 +25,7 @@ library(colorspace)
 # with the x and y arguments
 
 #'
-#' @title LexRefN gives the x,y coordinates for Lexis reference lines in several configs
+#' @title gives the x,y coordinates for Lexis reference lines in several configs
 #' 
 #' @description These coordinates are used for an optional overlay function for Lexis map plots.
 #' 
@@ -40,7 +38,7 @@ library(colorspace)
 #' @export
 #' 
 # TODO: make this function produce TAL diagrams too.
-LexRefN <- function(ages, years, N = 5, increasing = TRUE, equilateral = FALSE){
+LexRefNinternal <- function(ages, years, N = 5, increasing = TRUE, equilateral = FALSE){
 	# vertical
 	#par(mai=c(.5, .5, .5, .5), xaxs = "i", yaxs = "i")
 	#plot(NULL, xlim = c(1820,2060), ylim = c(0,100), axes = FALSE, ylab = "", xlab = "", asp = 1)
@@ -267,7 +265,7 @@ LexisPoly <- function(X, breaks = NULL, colramp = ramp(), equilateral = FALSE, N
 	Ticks <- list(x0 = x0, xat = xat, xlabs = xlabs, 
 			      y0 = y0, yat = yat, ylabs = ylabs)
 	# Reference lines follow ticks
-	Refs  <- LexRefN(c(Ages, max(Ages + 1)), 
+	Refs  <- LexRefNinternal(c(Ages, max(Ages + 1)), 
 			         c(Years, max(Years) + 1), 
 					 N, 
 					 increasing = TRUE, 
@@ -308,7 +306,7 @@ LexisPoly <- function(X, breaks = NULL, colramp = ramp(), equilateral = FALSE, N
 }
 
 
-plot.LexisPoly <- function(x, contour = FALSE,refs = TRUE, border = NA, add = FALSE, ...){
+plot.LexisPoly <- function(x, contour = FALSE, refs = TRUE, border = NA, add = FALSE, ...){
 	equilateral <- x$equilateral
 	
 	if (!add){
